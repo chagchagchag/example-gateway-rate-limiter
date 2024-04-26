@@ -15,7 +15,8 @@ spring:
           predicates:
             - Path=/**
           filters:
-            - name: RequestRateLimiter
+#            - name: RequestRateLimiter
+            - name: CustomRedisRateLimitFilter
               args:
                 redis-rate-limiter.replenishRate: 1
                 redis-rate-limiter.burstCapacity: 1

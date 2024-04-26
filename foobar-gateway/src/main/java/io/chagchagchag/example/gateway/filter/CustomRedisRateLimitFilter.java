@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
-public class RequestRateLimitFilter extends AbstractGatewayFilterFactory<RequestRateLimitFilter.Config> {
+public class CustomRedisRateLimitFilter extends AbstractGatewayFilterFactory<CustomRedisRateLimitFilter.Config> {
   private final RateLimiter<RedisRateLimiter.Config> rateLimiter;
 
-  public RequestRateLimitFilter(RateLimiter<RedisRateLimiter.Config> rateLimiter) {
+  public CustomRedisRateLimitFilter(RateLimiter<RedisRateLimiter.Config> rateLimiter) {
     super(Config.class);
     this.rateLimiter = rateLimiter;
   }
@@ -54,11 +54,18 @@ public class RequestRateLimitFilter extends AbstractGatewayFilterFactory<Request
     );
   }
 
-  class Config implements HasRouteId {
+  static class Config implements HasRouteId {
     private KeyResolver keyResolver;
     private String routeId;
-    public Config(KeyResolver keyResolver){
+
+    public Config(){}
+
+    public Config(
+        KeyResolver keyResolver,
+        String routeId
+    ){
       this.keyResolver = keyResolver;
+      this.routeId = routeId;
     }
 
     @Override
@@ -68,7 +75,7 @@ public class RequestRateLimitFilter extends AbstractGatewayFilterFactory<Request
 
     @Override
     public String getRouteId() {
-      return this.routeId;
+      return routeId;
     }
   }
 }
