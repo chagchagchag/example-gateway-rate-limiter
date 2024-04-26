@@ -1,4 +1,4 @@
-package io.chagchagchg.example.user;
+package io.chagchagchag.example.user;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
