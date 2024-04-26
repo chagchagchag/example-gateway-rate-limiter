@@ -1,0 +1,5 @@
+GET http://localhost:9000/healthcheck/ready
+USER-ID: a
+Accept: application/json
+
+###

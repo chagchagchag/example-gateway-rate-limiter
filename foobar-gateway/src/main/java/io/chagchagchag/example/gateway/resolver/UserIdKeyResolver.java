@@ -17,17 +17,12 @@ public class UserIdKeyResolver implements KeyResolver {
         .getHeaders()
         .getFirst("USER-ID");
 
-    return Mono.just(userId)
-        .map(str ->
-            Optional.ofNullable(str)
-                .map(id -> {
-                  logger.debug("USER-ID = {}", id);
-                  return id;
-                })
-                .orElseThrow(() -> {
-                  exchange.getResponse().setComplete();
-                  return new IllegalArgumentException("존재하지 않는 아이디입니다.");
-                })
-        );
+    return Optional.ofNullable(userId)
+        .map(Mono::justOrEmpty)
+        .orElseGet(() -> {
+          exchange.getResponse().setComplete();
+          logger.debug(">>> 'USER-ID' is Empty");
+          return Mono.error(new IllegalArgumentException("존재하지 않는 아이디입니다."));
+        });
   }
 }

@@ -1,6 +1,9 @@
 package io.chagchagchag.example.gateway.filter;
 
+import io.chagchagchag.example.gateway.resolver.UserIdKeyResolver;
 import java.nio.charset.StandardCharsets;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
@@ -16,10 +19,15 @@ import reactor.core.publisher.Mono;
 @Component
 public class CustomRedisRateLimitFilter extends AbstractGatewayFilterFactory<CustomRedisRateLimitFilter.Config> {
   private final RateLimiter<RedisRateLimiter.Config> rateLimiter;
+  private final UserIdKeyResolver userIdKeyResolver;
 
-  public CustomRedisRateLimitFilter(RateLimiter<RedisRateLimiter.Config> rateLimiter) {
+  public CustomRedisRateLimitFilter(
+      RateLimiter<RedisRateLimiter.Config> rateLimiter,
+      UserIdKeyResolver userIdKeyResolver
+  ) {
     super(Config.class);
     this.rateLimiter = rateLimiter;
+    this.userIdKeyResolver = userIdKeyResolver;
   }
 
   @Override
@@ -54,11 +62,16 @@ public class CustomRedisRateLimitFilter extends AbstractGatewayFilterFactory<Cus
     );
   }
 
+  @Getter @Setter
   static class Config implements HasRouteId {
     private KeyResolver keyResolver;
     private String routeId;
 
     public Config(){}
+
+    public Config(KeyResolver keyResolver){
+      this.keyResolver = keyResolver;
+    }
 
     public Config(
         KeyResolver keyResolver,
