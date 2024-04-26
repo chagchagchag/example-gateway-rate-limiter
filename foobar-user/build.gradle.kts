@@ -19,7 +19,7 @@ extra["springCloudVersion"] = "2023.0.1"
 
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
-  implementation("org.springframework.cloud:spring-cloud-starter-gateway")
+  implementation("org.springframework.boot:spring-boot-starter-web")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("io.projectreactor:reactor-test")
 }
